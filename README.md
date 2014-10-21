@@ -1,6 +1,6 @@
 # chef-hostsfile-cookbook
 
- This chef cookbook allows to have a default recipe to the "hostsfile" recipe...
+ This chef cookbook allows to have a default recipe to the "hostsfile" cookbook...
 
 ## Supported Platforms
 
@@ -26,7 +26,7 @@
 ## Usage
 
 
- Data bag example:
+ Data bag "clusters" example:
 
     {
       "id": "fqdn",
@@ -58,7 +58,13 @@ Include `chef-hostsfile` in your node's `run_list`:
 
 ```json
 {
+  "override_attributes" => {
+    "chef-nodeAttributes" => {
+      "databag_name" => "clusters"
+    }
+  },
   "run_list": [
+    "recipe[chef-nodeAttributes::default]",
     "recipe[chef-hostsfile::default]"
   ]
 }
