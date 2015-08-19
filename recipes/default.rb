@@ -19,26 +19,22 @@
 #
 node['chef-hostsfile'].each do |e|
   e.each do |ip, v|
-    case ip
-      when "0.0.0.0"
-        ip = node['ipaddress']
-    end
+    ip = node[ ip[1..-1] ] if ip[0] == ':'
 
     hostsfile_entry ip do
-      if v['domain'][0] == ':'
-           hostname node[ v['domain'][1..-1] ]
-      else hostname v['domain']
-      end if v['domain']
-
-      al=[]; v['aliases'].each do |i|
+      ali=[]
+      ( (v['aliases'].is_a? Array) ? v['aliases'] : Array[v['aliases']] ).each do |i|
         if i[0] == ':'
-             al << node[ i[1..-1] ]
-        else al << i
+             ali << node[ i[1..-1] ]
+        else ali << i
         end
       end if v['aliases']
-      aliases al if al.any?
 
-      action (v['action']? v['action']: 'create')
+      hostname v['domain'][0] == ':' ? node[ v['domain'][1..-1] ] : v['domain'] if defined? v['domain'] && v['domain'] != ''
+      aliases  ali if ali.any?
+      action   v['action'] ? v['action'] : 'create'
     end
+
   end
-end if defined? node['chef-hostsfile'] && (node['chef-hostsfile'].is_a? Array)
+end if defined? node['chef-hostsfile'] && node['chef-hostsfile'] != ''
+
