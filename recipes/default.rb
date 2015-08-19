@@ -23,9 +23,21 @@ node['chef-hostsfile'].each do |e|
       when "0.0.0.0"
         ip = node['ipaddress']
     end
+
     hostsfile_entry ip do
-      hostname v['domain'] if v['domain']
-      aliases v['aliases'] if v['aliases']
+      if v['domain'][0] == ':'
+           hostname node[ v['domain'][1..-1] ]
+      else hostname v['domain']
+      end if v['domain']
+
+      al=[]; v['aliases'].each do |i|
+        if i[0] == ':'
+             al << node[ i[1..-1] ]
+        else al << i
+        end
+      end if v['aliases']
+      aliases al if al.any?
+
       action (v['action']? v['action']: 'create')
     end
   end
