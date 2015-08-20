@@ -29,7 +29,7 @@ Exemple1:
  Data bag "node" example:
 
     {
-      "id": "squid1_my_domain",
+      "id": "squid1_my_domain",     # fqdn of the node...
        "chef-hostsfile" : [{
           "127.0.1.1": {
              "action": "remove"
