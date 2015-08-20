@@ -25,32 +25,57 @@
 
 ## Usage
 
-
- Data bag "clusters" example:
+Exemple1:
+ Data bag "node" example:
 
     {
-      "id": "fqdn",
+      "id": "squid1_my_domain",
        "chef-hostsfile" : [{
           "127.0.1.1": {
              "action": "remove"
           }
         },{
           "10.7.0.28": {
-             "domain": "squid1.mydomain",
+             "domain": "squid1.my.domain",
              "aliases": ["squid1"]
           }
         },{
           "10.7.0.29": {
-             "domain": "squid2.mydomain",
+             "domain": "squid2.my.domain",
              "aliases": ["squid2"]
           }
         },{
           "10.7.0.27": {
-             "domain": "squid.mydomain",
+             "domain": "squid.my.domain",
              "aliases": ["squid"]
         }
        }],
        ...
+
+ Must be load with the 'chef-nodeAttributes' cookbook.
+
+Exemple2:
+ Data bag "service" example:
+
+    {
+      "id": "hostsfile",
+      "chef-hostsfile": [
+        {
+          ":ipaddress": {
+            "domain": ":fqdn",
+            "aliases": [
+              ":hostname",
+              "me"
+            ]
+          }
+        }
+      ]
+    }
+
+ Must be load with the 'chef-serviceAttributes' cookbook (see below).
+
+ NOTICE: an attribute name with a colon as first character is substitute with its search value in the ohai database...
+
 
 ### chef-hostsfile::default
 
@@ -60,11 +85,11 @@ Include `chef-hostsfile` in your node's `run_list`:
 {
   "override_attributes" => {
     "chef-nodeAttributes" => {
-      "databag_name" => "clusters"
+      "service" => "hostsfile"
     }
   },
   "run_list": [
-    "recipe[chef-nodeAttributes::default]",
+    "recipe[chef-serviceAttributes::default]",
     "recipe[chef-hostsfile::default]"
   ]
 }
