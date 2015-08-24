@@ -30,11 +30,11 @@ node['chef-hostsfile'].each do |e|
         end
       end if v['aliases']
 
-      hostname v['domain'][0] == ':' ? node[ v['domain'][1..-1] ] : v['domain'] if defined? v['domain'] && v['domain'] != ''
+      hostname v['domain'][0] == ':' ? node[ v['domain'][1..-1] ] : v['domain'] if v['domain'] && v['domain'] != ''
       aliases  ali if ali.any?
       action   v['action'] ? v['action'] : 'create'
     end
 
   end
-end if defined? node['chef-hostsfile'] && node['chef-hostsfile'] != ''
+end if node['chef-hostsfile'] && node['chef-hostsfile'] != ''
 
