@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-node['chef-hostsfile'].each do |e|
+(node['chef-hostsfile'][node.name] || node['chef-hostsfile'][node.domain] || node['chef-hostsfile']).each do |e|
   e.each do |ip, v|
     ip = node[ ip[1..-1] ] if ip[0] == ':'
 
     hostsfile_entry ip do
       ali=[]
-      ( (v['aliases'].is_a? Array) ? v['aliases'] : Array[v['aliases']] ).each do |i|
+      Array(v['aliases']).each do |i|
         if i[0] == ':'
              ali << node[ i[1..-1] ]
         else ali << i
