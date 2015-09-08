@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-(node['chef-hostsfile'][node.name] || node['chef-hostsfile'][node.domain] || node['chef-hostsfile']).each do |e|
+((node['chef-hostsfile'].is_a? Array) ? node['chef-hostsfile'] : node['chef-hostsfile'][node.name] || node['chef-hostsfile'][node.domain]).each do |e|
   e.each do |ip, v|
     ip = node[ ip[1..-1] ] if ip[0] == ':'
 
